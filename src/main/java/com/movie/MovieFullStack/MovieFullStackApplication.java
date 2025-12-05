@@ -10,3 +10,14 @@ public class MovieFullStackApplication {
 		SpringApplication.run(MovieFullStackApplication.class, args);
 	}
 }
+/*
+{
+  "title": "Avengers: Infinity War",
+  "director": "Russo Brothers",
+  "studio": "Marvel Studios",
+  "movieCast": ["RDJ", "Chris Evans", "Scarlett Johansson"],
+  "releaseYear": 2018,
+  "poster": "default.png",
+  "posterUrl": "url"
+}
+ */

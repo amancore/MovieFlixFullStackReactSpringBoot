@@ -1,43 +1,31 @@
-package com.movie.MovieFullStack.entites;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreType;
-import jakarta.persistence.*;
+package com.movie.MovieFullStack.Dto;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-
 import java.util.Set;
-
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Setter
 @Getter
-public class Movie {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY )
+@Setter
+public class MovieDto {
     private Integer movieId;
 
-    @Column(nullable = false, length = 200)
     @NotBlank(message = "please provide movie title") // not null not empty
     private String title;
 
-    @Column(nullable = false)
     @NotBlank(message = "please provide director name")
     private String director;
 
-    @Column(nullable = false)
     @NotBlank(message = "please provide studio name")
     private String studio;
 
-    @ElementCollection
-    @CollectionTable(name = "movie_cast")
     private Set<String> movieCast;
 
-    @Column(nullable = false)
     private Integer releaseYear;
 
-    @Column(nullable = false)
     @NotBlank(message = "please provide poster name")
     private String poster;
+
+    @NotBlank(message = "please provide posterUrl name")
+    private String posterUrl;  // actual image data link
 
 }
