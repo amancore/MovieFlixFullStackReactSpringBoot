@@ -1,6 +1,7 @@
 package com.movie.MovieFullStack.Controllers;
 
 import com.movie.MovieFullStack.Dto.MovieDto;
+import com.movie.MovieFullStack.mapper.ModelMapper;
 import com.movie.MovieFullStack.service.MovieService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,11 +24,7 @@ public class MovieController {
             value = "/add-movie",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
-    public ResponseEntity<MovieDto> addMovieHandler(
-            @RequestPart("file") MultipartFile file,
-            @RequestParam("movieDto") String movieDtoJson
-    ) throws IOException {
-
+    public ResponseEntity<MovieDto> addMovieHandler(@RequestPart("file") MultipartFile file, @RequestParam("movieDto") String movieDtoJson) throws IOException {
         // Convert JSON string into MovieDto object
         ObjectMapper objectMapper = new ObjectMapper();
         MovieDto movieDto = objectMapper.readValue(movieDtoJson, MovieDto.class);
@@ -37,7 +34,6 @@ public class MovieController {
         return new ResponseEntity<>(savedMovie, HttpStatus.CREATED);
     }
 
-
     @GetMapping("/{movieId}")
     public ResponseEntity<MovieDto> getMovieHandler(@PathVariable Integer movieId){
         return ResponseEntity.ok(movieService.getMovie(movieId));
@@ -46,5 +42,23 @@ public class MovieController {
     @GetMapping
     public ResponseEntity<List<MovieDto>> getAllMovies(){
         return ResponseEntity.ok(movieService.getAllMovies());
+    }
+
+    @PutMapping(
+            value = "/update/{movieId}",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    public ResponseEntity<MovieDto> updateMovieById(@PathVariable Integer movieId,@RequestPart("file") MultipartFile file,@RequestParam("movieDto") @RequestPart String movieDtoJson) throws IOException {
+        if(file.isEmpty()){
+            file = null;
+        }
+        ObjectMapper objectMapper = new ObjectMapper();
+        MovieDto movieDto = objectMapper.readValue(movieDtoJson, MovieDto.class);
+        return ResponseEntity.ok(movieService.updateMovie(movieId,movieDto, file));
+    }
+
+    @DeleteMapping("/delete/{movieId}")
+    public ResponseEntity<String> deleteMovieById(@PathVariable Integer movieId) throws IOException {
+        return ResponseEntity.ok(movieService.deleteMovie(movieId));
     }
 }
