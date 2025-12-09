@@ -1,6 +1,7 @@
 package com.movie.MovieFullStack.Controllers;
 
 import com.movie.MovieFullStack.Dto.MovieDto;
+import com.movie.MovieFullStack.exceptions.EmptyFileException;
 import com.movie.MovieFullStack.mapper.ModelMapper;
 import com.movie.MovieFullStack.service.MovieService;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,10 @@ public class MovieController {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
     public ResponseEntity<MovieDto> addMovieHandler(@RequestPart("file") MultipartFile file, @RequestParam("movieDto") String movieDtoJson) throws IOException {
+
+        if(file.isEmpty()){
+            throw new EmptyFileException("File is empty please send another file");
+        }
         // Convert JSON string into MovieDto object
         ObjectMapper objectMapper = new ObjectMapper();
         MovieDto movieDto = objectMapper.readValue(movieDtoJson, MovieDto.class);

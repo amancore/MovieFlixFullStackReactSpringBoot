@@ -1,6 +1,7 @@
 package com.movie.MovieFullStack.service.serviceImpl;
 import com.movie.MovieFullStack.Dto.MovieDto;
 import com.movie.MovieFullStack.entites.Movie;
+import com.movie.MovieFullStack.exceptions.MovieNotFoundException;
 import com.movie.MovieFullStack.mapper.ModelMapper;
 import com.movie.MovieFullStack.repository.MovieRepository;
 import com.movie.MovieFullStack.service.FileService;
@@ -51,7 +52,8 @@ Mapper should include posterUrl → MovieDto → Required.*/
     @Override
     public MovieDto getMovie(Integer movieId) {
         // 1. check the data in the db if exists , fetch the data of the given id
-        Movie movie = movieRepository.findById(movieId).orElseThrow(()-> new RuntimeException("movie not find on this id "+ movieId));
+        Movie movie = movieRepository.findById(movieId)
+                .orElseThrow(()-> new MovieNotFoundException("movie not find on this id "+ movieId));
         // 2. generate posterUrl
         // 3. map to movieDto object and return it
         return ModelMapper.convertMovieDto(movie, "/file/");
@@ -68,7 +70,7 @@ Mapper should include posterUrl → MovieDto → Required.*/
     @Override
     public MovieDto updateMovie(Integer movieId, MovieDto movieDto, MultipartFile file) throws IOException {
         // 1. check if the movie exists or not with the given id
-       Movie movie =  movieRepository.findById(movieId).orElseThrow(()->new NullPointerException("Movie was not found by this id : " + movieId) );
+       Movie movie =  movieRepository.findById(movieId).orElseThrow(()->new MovieNotFoundException("movie not find on this id "+ movieId));
 
         // 2. if movie exists  , 2.1 either change the file    , 2.2 or just change the data
         // if file not null , delete the existing file associated with the record, and uplaod the new file
@@ -97,7 +99,7 @@ Mapper should include posterUrl → MovieDto → Required.*/
     public String deleteMovie(Integer movieId) throws IOException {
         // 1. check if the movie exists in the db delete it
         System.out.println(movieId);
-        Movie movie = movieRepository.findById(movieId).orElseThrow(()-> new RuntimeException("movie was not found by this id :" + movieId ));
+        Movie movie = movieRepository.findById(movieId).orElseThrow(()-> new MovieNotFoundException("movie not find on this id "+ movieId));
         Integer id = movie.getMovieId();
         // 2. delete the file associated with this obj
         String delFilePath = path + File.separator + movie.getPoster();
