@@ -28,7 +28,8 @@ public class FileController {
     }
 
     // for serving the file
-    @GetMapping("/{fileName}")
+//    @GetMapping("/{fileName}")
+    @GetMapping("/{fileName:.+}")  // not it supports the file name with spaces
     public void serveFileHandler(@PathVariable String fileName, HttpServletResponse response) throws IOException {
         InputStream resourceFile= fileService.getResourceFile(path, fileName);
         response.setContentType(MediaType.IMAGE_PNG_VALUE);

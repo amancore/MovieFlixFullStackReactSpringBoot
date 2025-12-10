@@ -1,9 +1,10 @@
 package com.movie.MovieFullStack.Controllers;
 
 import com.movie.MovieFullStack.Dto.MovieDto;
+import com.movie.MovieFullStack.Dto.MoviePageResponse;
 import com.movie.MovieFullStack.exceptions.EmptyFileException;
-import com.movie.MovieFullStack.mapper.ModelMapper;
 import com.movie.MovieFullStack.service.MovieService;
+import com.movie.MovieFullStack.utils.AppConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -66,4 +67,21 @@ public class MovieController {
     public ResponseEntity<String> deleteMovieById(@PathVariable Integer movieId) throws IOException {
         return ResponseEntity.ok(movieService.deleteMovie(movieId));
     }
+
+    @GetMapping("/allMoviesPage")
+    public ResponseEntity<MoviePageResponse> getAllMovieWithPagination(
+            @RequestParam(defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
+            @RequestParam(defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize){
+        return ResponseEntity.ok(movieService.getAllMovieWithPagination(pageNumber, pageSize));
+    }
+    @GetMapping("allMoviesPageSort")
+    public ResponseEntity<MoviePageResponse> getAllMovieWithPaginationAndSorting(
+            @RequestParam(defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
+            @RequestParam(defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
+            @RequestParam(defaultValue = AppConstants.SORT_BY, required = false) String sortBy,
+            @RequestParam(defaultValue = AppConstants.SORT_DIR,required = false) String dir
+            ){
+        return ResponseEntity.ok(movieService.getAllMovieWithPaginationAndSorting(pageNumber,pageSize,sortBy,dir));
+    }
+
 }

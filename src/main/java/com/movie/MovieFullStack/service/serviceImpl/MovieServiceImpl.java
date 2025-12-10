@@ -1,5 +1,6 @@
 package com.movie.MovieFullStack.service.serviceImpl;
 import com.movie.MovieFullStack.Dto.MovieDto;
+import com.movie.MovieFullStack.Dto.MoviePageResponse;
 import com.movie.MovieFullStack.entites.Movie;
 import com.movie.MovieFullStack.exceptions.MovieNotFoundException;
 import com.movie.MovieFullStack.mapper.ModelMapper;
@@ -8,6 +9,10 @@ import com.movie.MovieFullStack.service.FileService;
 import com.movie.MovieFullStack.service.MovieService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
@@ -108,5 +113,32 @@ Mapper should include posterUrl → MovieDto → Required.*/
         // 3. delete the movie obj
         movieRepository.delete(movie);
         return "movie was delete by this id : " + id ;
+    }
+
+    @Override
+    public MoviePageResponse getAllMovieWithPagination(Integer pageNumber, Integer pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<Movie> moviePages= movieRepository.findAll(pageable);
+        List<MovieDto> moviesDtos = moviePages
+                .getContent()
+                .stream()
+                .map(m -> ModelMapper.convertMovieDto(m,"/file/"))
+                .toList();
+        return new MoviePageResponse(moviesDtos,pageNumber, pageSize, moviePages.getTotalPages(),moviePages.getTotalElements(),
+                moviePages.isLast());
+    }
+    @Override
+    public MoviePageResponse getAllMovieWithPaginationAndSorting(Integer pageNumber, Integer pageSize, String sortBy, String dir) {
+        Sort sort = dir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize,sort);
+        Page<Movie> moviePages= movieRepository.findAll(pageable);
+        List<MovieDto> moviesDtos = moviePages
+                .getContent()
+                .stream()
+                .map(m -> ModelMapper.convertMovieDto(m,"/file/"))
+                .toList();
+        return new MoviePageResponse(moviesDtos,pageNumber, pageSize, moviePages.getTotalPages(),moviePages.getTotalElements(),
+                moviePages.isLast());
     }
 }
