@@ -16,54 +16,32 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public String uploadFile(String path, MultipartFile file) throws IOException {
-
+        // 1. get the name of the file
         String originalName = file.getOriginalFilename();
-        // 1️⃣ Make filename safe (small change here)
+        // 2. Make filename safe (small change here)
         assert originalName != null;
-//        String safeName = originalName.replaceAll("[^a-zA-Z0-9\\.]", "_");
         String safeName = originalName.replaceAll("[^a-zA-Z0-9.]", "_");
 
-        // 2️⃣ Build file path using safeName
+        // 3. these two things needs to get appended
         String filePath = path + File.separator + safeName;
 
-        // 3️⃣ Create folder if not exists
+        // 4. Create a file obj and copy the file to that file that we are getting
+        // this is responsible for where the path exists or not
+        // Create folder if not exists if not then create it
         File f = new File(path);
         if (!f.exists()) {
-            f.mkdir();
+            f.mkdir(); // posters
         }
 
-        // 4️⃣ Copy/upload file
+        // 5. copy the file or upload the file to the path | filePath is actual path of the file where we need to upload the file
+        // StandardCopyOption -> if a file with same name already exists -> replace it
         Files.copy(
                 file.getInputStream(),
                 Paths.get(filePath),
                 StandardCopyOption.REPLACE_EXISTING
         );
-        // 5️⃣ Return safe filename
+        // 6. Return safe filename
         return safeName;
-
-
-        //        // get name of the file
-//        String fileName = file.getOriginalFilename();
-//
-//        // to get the file path
-//        // these two things needs to get appended
-//        String filePath = path + File.separator + fileName;
-//
-//        // Create a file object and cpy the file to that file that we are getting
-//        // this is responsible for where tha path exists or not
-//        File f = new File(path);  // checking if the folder already exits
-//        if(!f.exists()){  // if folder don't exists create it
-//            f.mkdir(); // posters
-//        }
-//        // copy the file or upload the file to the path
-//        // filePath is acutal path of the file where we need to upload the file
-//        // StandardCopyOption -> If a file with same name already exists → replace it.
-//        Files.copy(
-//                file.getInputStream(),
-//                Paths.get(filePath),
-//                StandardCopyOption.REPLACE_EXISTING
-//        );
-//        return fileName;
     }
 
     @Override
