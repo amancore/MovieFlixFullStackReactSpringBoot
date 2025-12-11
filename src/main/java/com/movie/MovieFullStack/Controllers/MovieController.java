@@ -1,5 +1,6 @@
 package com.movie.MovieFullStack.Controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.movie.MovieFullStack.Dto.MovieDto;
 import com.movie.MovieFullStack.Dto.MoviePageResponse;
 import com.movie.MovieFullStack.exceptions.EmptyFileException;
@@ -11,7 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.util.List;
