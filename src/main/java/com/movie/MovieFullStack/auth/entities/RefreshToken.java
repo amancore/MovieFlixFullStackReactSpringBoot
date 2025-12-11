@@ -2,6 +2,7 @@ package com.movie.MovieFullStack.auth.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -12,8 +13,8 @@ import java.time.Instant;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class RefreshToken {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer tokenId;
@@ -26,6 +27,5 @@ public class RefreshToken {
     private Instant expirationTime;
 
     @OneToOne
-    @JoinColumn(name = "user_id")
     private User user;
 }
