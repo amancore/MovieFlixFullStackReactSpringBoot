@@ -4,26 +4,24 @@ import com.movie.MovieFullStack.auth.entities.RefreshToken;
 import com.movie.MovieFullStack.auth.entities.User;
 import com.movie.MovieFullStack.auth.repositories.RefreshTokenRepository;
 import com.movie.MovieFullStack.auth.repositories.UserRepository;
-import jakarta.persistence.Entity;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
-import java.sql.Ref;
 import java.time.Instant;
 import java.util.UUID;
 
+@Service
 @RequiredArgsConstructor
-
 public class RefreshTokenService {
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     public RefreshToken createRefreshToken (String username){
-        User user = userRepository.findByUsername(username).orElseThrow(()->new UsernameNotFoundException("Username is not found by this mail " + username));
+        User user = userRepository.findByEmail(username).orElseThrow(()->new UsernameNotFoundException("Username is not found by this mail " + username));
         RefreshToken refreshToken= user.getRefreshToken();
         if (refreshToken== null){
-            long refreshTokenValidity = 5*60*60*10000;
+            // long refreshTokenValidity = 5*60*60*10000;
+            long refreshTokenValidity = 30* 1000; // <--- testing --->
             refreshToken = RefreshToken
                     .builder()
                     .refreshToken(UUID.randomUUID().toString())
