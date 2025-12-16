@@ -26,7 +26,7 @@ public class SecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/auth/**") // this should be allowed for everyone , else authenticated by the jwt
+                        .requestMatchers("/api/v1/auth/**", "/forgotPassword/**") // this should be allowed for everyone , else authenticated by the jwt
                         .permitAll()
                         .anyRequest()
                         .authenticated())
